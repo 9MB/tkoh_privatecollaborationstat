@@ -317,7 +317,6 @@ function App() {
                             return (
                               <>
                                 <div className="SpecialtyRow">
-                                  <h2>{ward.specialty.replace("and", "&")}</h2>
                                   <div className="BedCountColumn">
                                     <div className="Row">
                                     <label for={`${ward.specialty}bh_count`} className="CounterLabel">BH:</label>

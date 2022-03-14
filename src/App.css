@@ -92,6 +92,7 @@ body > #root > div{
     min-height: 50px;
     font-weight: 500;
     margin-top: 15px;
+    color: blue;
   }
   
   .SpecialtyRows{
@@ -118,7 +119,7 @@ body > #root > div{
   }
   
   .covid_counter{
-    width:28%;
+    width:58%;
     height:40px;
     font-weight: 300;
     padding-left:15px;
@@ -126,9 +127,10 @@ body > #root > div{
   }
   
   .CounterLabel{
-    font-weight: 300;
+    font-weight: 700;
     margin:0;
-    color:blue;
+    margin-right: 15px;
+    margin-top: 5px;
   }
   
   .covid_counter_option{
@@ -200,7 +202,7 @@ body > #root > div{
   .BedCountColumn{
     display:flex;
     flex-direction: column;
-    width:80%;
+    width:90%;
     align-items: center;
   }
 
@@ -219,7 +221,7 @@ body > #root > div{
   .Row{
     display: flex;
     flex-direction: row;
-    width:80%;
+    width:90%;
     margin-top:15px;
     justify-content: center;
     text-align: center;
