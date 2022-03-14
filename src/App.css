@@ -104,6 +104,7 @@ body > #root > div{
     flex-direction: row;
     margin-top:15px;
     width:100%;
+    margin-bottom: 25px;
     align-items: center;
     justify-content: space-evenly;
   }
@@ -199,6 +200,27 @@ body > #root > div{
   .BedCountColumn{
     display:flex;
     flex-direction: column;
-    width:60%;
+    width:80%;
     align-items: center;
+  }
+
+
+  #SelectDateLabel{
+    color:gray;
+    margin-top: 15px;
+  }
+
+  .SelectDateDiv{
+    flex:2;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .Row{
+    display: flex;
+    flex-direction: row;
+    width:80%;
+    margin-top:15px;
+    justify-content: center;
+    text-align: center;
   }

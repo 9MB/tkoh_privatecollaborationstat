@@ -10,6 +10,7 @@ export default function SummaryTable(props) {
                         <th>Specialty</th>
                         <th>BH</th>
                         <th>STH</th>
+                        <th>CUMC</th>
                         <th>Total</th>
                         <th>Update</th>
                     </tr>
@@ -21,6 +22,7 @@ export default function SummaryTable(props) {
                                 <td>{props.fetchedData[index].specialty.replace("and", "&")}</td>
                                 <td>{props.fetchedData[index].BH_count}</td>
                                 <td>{props.fetchedData[index].STH_count}</td>
+                                <td>{props.fetchedData[index].CUMC_count}</td>
                                 <td>{props.fetchedData[index].total}</td>
                                 <td>{new Date(props.fetchedData[index].lastupdate).toLocaleDateString("it")}</td>
                             </tr>

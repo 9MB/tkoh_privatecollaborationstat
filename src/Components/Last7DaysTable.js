@@ -8,8 +8,9 @@ export default function Last7DaysTable(props){
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>STH</th>
                         <th>BH</th>
+                        <th>STH</th>
+                        <th>CUMC</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -18,8 +19,9 @@ export default function Last7DaysTable(props){
                         return(
                             <tr>
                                 <td>{dailyStat.date}</td>
-                                <td>{dailyStat.dailySTHTotal}</td>
                                 <td>{dailyStat.dailyBHTotal}</td>
+                                <td>{dailyStat.dailySTHTotal}</td>
+                                <td>{dailyStat.dailyCUMCTotal}</td>
                                 <td>{dailyStat.dailyTotal}</td>
                             </tr>
                         )

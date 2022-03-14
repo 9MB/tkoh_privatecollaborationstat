@@ -6,8 +6,10 @@ import { db } from './index';
 import SummaryTable from './Components/SummaryTable';
 import Spinner from 'react-bootstrap/Spinner'
 import Last7DaysTable from './Components/Last7DaysTable';
+import Row from 'react-bootstrap/Row'
 
 export const specialtiesArray = ["AandE", "AandOT", "MED", "ORTGYN", "SUR"];
+var currentSelectedDate = new Date().toLocaleDateString('zu-ZA');
 
 function App() {
   const [logIn, setLogIn] = useState("");
@@ -52,43 +54,117 @@ function App() {
     setLogIn(cookie);
   }
 
-  async function updateDepartment(department) {
+  async function updateDepartment(department, pastHistory) {
+    var tmp_pastHistory = pastHistory;
     const departmentRef = doc(db, 'Departments', department);
     const BH_count = parseInt(document.getElementById(`${department}bh_count`).value);
     const STH_count = parseInt(document.getElementById(`${department}sth_count`).value);
+    const CUMC_count = parseInt(document.getElementById(`${department}cumc_count`).value);
+    const today = new Date().toLocaleDateString('zu-ZA');
+    const historyObject = {
+      date: today,
+      BH_count: BH_count,
+      STH_count: STH_count,
+      CUMC_count: CUMC_count
+    }
+
+    if (tmp_pastHistory.length > 0 && tmp_pastHistory[tmp_pastHistory.length - 1].date === today) {
+      tmp_pastHistory.splice(-1, 1);
+      tmp_pastHistory.push(historyObject);
+    } else {
+      tmp_pastHistory.push(historyObject);
+    }
 
     setDoc(departmentRef, {
       BH_count: BH_count,
       STH_count: STH_count,
+      CUMC_count: CUMC_count,
       lastupdate: new Date().getTime(),
-      total: STH_count + BH_count,
+      total: STH_count + BH_count + CUMC_count,
+      pastHistory: tmp_pastHistory
     },
       { merge: true })
       .then(() => {
-        alert("Successfully update");
-      })
-      .finally(() => {
         window.location.reload();
       })
+  }
+
+  async function updateHistory(department, pastHistory) {
+    var tmp_pastHistory = pastHistory;
+    const departmentRef = doc(db, 'Departments', department);
+    const statisticsRef = doc(db, 'Statistics', 'StatisticsLog');
+    var tmp_last7DaysArray = [...last7DaysArray];
+    var tmp_allDays = [...allDaysArray.current]
+    var tmp_last7DaysSelectedDate = [...last7DaysArray].filter(history => history.date === currentSelectedDate)[0];
+
+    const selectedPastHistory = pastHistory.filter(history => history.date === currentSelectedDate)[0];
+    const BH_count = parseInt(document.getElementById(`${department}bh_count`).value);
+    const STH_count = parseInt(document.getElementById(`${department}sth_count`).value);
+    const CUMC_count = parseInt(document.getElementById(`${department}cumc_count`).value);
+    const BH_diff = BH_count - parseInt(selectedPastHistory.BH_count);
+    const STH_diff = STH_count - parseInt(selectedPastHistory.STH_count);
+    const CUMC_diff = CUMC_count - parseInt(selectedPastHistory.CUMC_count);
+    const total_diff = BH_diff + STH_diff + CUMC_diff;
+    console.log("Diff", BH_diff, STH_diff, CUMC_diff, total_diff);
+
+    console.log("tmp_last7days", tmp_last7DaysSelectedDate);
+    tmp_last7DaysSelectedDate.dailyTotal = tmp_last7DaysSelectedDate.dailyTotal + total_diff;
+    tmp_last7DaysSelectedDate.dailyBHTotal = tmp_last7DaysSelectedDate.dailyBHTotal + BH_diff;
+    tmp_last7DaysSelectedDate.dailySTHTotal = tmp_last7DaysSelectedDate.dailySTHTotal + STH_diff;
+    tmp_last7DaysSelectedDate.dailyCUMCTotal = tmp_last7DaysSelectedDate.dailyCUMCTotal + CUMC_diff;
+    console.log("tmp_last7days", tmp_last7DaysSelectedDate);
+
+    const indexOfStatHistory = tmp_last7DaysArray.findIndex(history => history.date === currentSelectedDate);
+    tmp_last7DaysArray.splice(indexOfStatHistory, 1, tmp_last7DaysSelectedDate);
+    const indexOfStatAllDaysHistory = tmp_allDays.findIndex(history => history.date === currentSelectedDate);
+    tmp_allDays.splice(indexOfStatAllDaysHistory, 1, tmp_last7DaysSelectedDate);
+
+    const historyObject = {
+      date: currentSelectedDate,
+      BH_count: BH_count,
+      STH_count: STH_count,
+      CUMC_count: CUMC_count
+    }
+    const indexOfDepartmentHistory = tmp_pastHistory.findIndex(history => history.date === currentSelectedDate);
+    tmp_pastHistory.splice(indexOfDepartmentHistory, 1, historyObject);
+
+    setDoc(departmentRef, {
+      pastHistory: tmp_pastHistory
+    },
+      { merge: true })
+      .then(() => {
+        setDoc(statisticsRef, {
+          last_seven_days: tmp_last7DaysArray,
+          all_days: tmp_allDays
+        },
+          { merge: true })
+          .then(() => {
+            window.location.reload();
+          })
+      })
+
   }
 
   async function calculateStatistics() {
     const statisticsRef = doc(db, 'Statistics', 'StatisticsLog');
     var tmp_last7DaysArray = [...last7DaysArray];
-    const today = new Date().toLocaleDateString('it');
+    const today = new Date().toLocaleDateString('zu-ZA');
     var dailyTotal = 0;
     var dailyBHTotal = 0;
     var dailySTHTotal = 0;
+    var dailyCUMCTotal = 0;
     fetchedDepartmentsStatus.forEach(department => {
       dailyTotal = dailyTotal + department.total;
       dailyBHTotal = dailyBHTotal + department.BH_count;
       dailySTHTotal = dailySTHTotal + department.STH_count;
+      dailyCUMCTotal = dailyCUMCTotal + department.CUMC_count;
     });
     const dailyObject = {
       date: today,
       dailyTotal: dailyTotal,
       dailyBHTotal: dailyBHTotal,
-      dailySTHTotal: dailySTHTotal
+      dailySTHTotal: dailySTHTotal,
+      dailyCUMCTotal: dailyCUMCTotal
     }
 
     if (allDaysArray.current.length > 0 && allDaysArray.current[allDaysArray.current.length - 1].date === today) {
@@ -146,6 +222,23 @@ function App() {
       console.log("No such document!");
     }
   }
+
+  function viewHistory(dateString, department, pastHistory) {
+    console.log("DateString", dateString);
+    currentSelectedDate = dateString;
+    const selectedDateHistory = pastHistory.filter(history => history.date === dateString)[0];
+    if (selectedDateHistory !== undefined) {
+      document.getElementById(`${department}bh_count`).value = selectedDateHistory.BH_count;
+      document.getElementById(`${department}sth_count`).value = selectedDateHistory.STH_count;
+      document.getElementById(`${department}cumc_count`).value = selectedDateHistory.CUMC_count;
+    } else {
+      document.getElementById(`${department}bh_count`).value = 0;
+      document.getElementById(`${department}sth_count`).value = 0;
+      document.getElementById(`${department}cumc_count`).value = 0;
+    }
+  }
+
+
 
   return (
     <div className="App">
@@ -224,9 +317,10 @@ function App() {
                             return (
                               <>
                                 <div className="SpecialtyRow">
-                                  <h5>{ward.specialty.replace("and", "&")}</h5>
+                                  <h2>{ward.specialty.replace("and", "&")}</h2>
                                   <div className="BedCountColumn">
-                                    <label for={`${ward.specialty}bh_count`} className="CounterLabel">Transfer to BH today:</label>
+                                    <div className="Row">
+                                    <label for={`${ward.specialty}bh_count`} className="CounterLabel">BH:</label>
                                     <select className="covid_counter" id={`${ward.specialty}bh_count`} defaultValue={ward.BH_count}>
                                       {[...Array(50).keys()].map(option => {
                                         return (
@@ -234,7 +328,9 @@ function App() {
                                         )
                                       })}
                                     </select>
-                                    <label for={`${ward.specialty}sth_count`} className="CounterLabel">Transfer to STH today:</label>
+                                    </div>
+                                    <div className="Row">
+                                    <label for={`${ward.specialty}sth_count`} className="CounterLabel">STH:</label>
                                     <select className="covid_counter" id={`${ward.specialty}sth_count`} defaultValue={ward.STH_count}>
                                       {[...Array(50).keys()].map(option => {
                                         return (
@@ -242,8 +338,21 @@ function App() {
                                         )
                                       })}
                                     </select>
+                                    </div>
+                                    <div className="Row">
+                                    <label for={`${ward.specialty}cumc_count`} className="CounterLabel">CUMC:</label>
+                                    <select className="covid_counter" id={`${ward.specialty}cumc_count`} defaultValue={ward.CUMC_count}>
+                                      {[...Array(50).keys()].map(option => {
+                                        return (
+                                          <option className="covid_counter_option" value={option}>{option}</option>
+                                        )
+                                      })}
+                                    </select>
+                                    </div>
+                                    <label id="SelectDateLabel" for="start">Select Date:</label>
+                                    <input type="date" id="SelectDateInput" name="trip-start" defaultValue={new Date().toLocaleDateString('zu-ZA')} onChange={(event) => { viewHistory(event.target.value, ward.specialty, ward.pastHistory) }} />
                                   </div>
-                                  <Button variant="success" onClick={() => { updateDepartment(ward.specialty) }}>Update</Button>
+                                  <Button variant="success" onClick={() => { currentSelectedDate === new Date().toLocaleDateString('zu-ZA') ? updateDepartment(ward.specialty, ward.pastHistory) : updateHistory(ward.specialty, ward.pastHistory) }}>Update</Button>
                                 </div>
                                 <div className="InfoRow">
                                   <h5>Last Update @ {new Date(ward.lastupdate).toLocaleString()}</h5>
