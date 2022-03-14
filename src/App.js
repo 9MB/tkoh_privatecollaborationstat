@@ -302,7 +302,7 @@ function App() {
                 <h3>Last 7 Days Report</h3>
                 <Last7DaysTable fetchedStatistics={last7DaysArray} />
                 <br />
-                <h3>Cases Transfer From Specialties to Private Today</h3>
+                <h3>Cases Transfer From TKOH to Private Hospital Today</h3>
                 <SummaryTable fetchedData={fetchedDepartmentsStatus} />
               </>
             ) : (

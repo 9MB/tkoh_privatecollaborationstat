@@ -18,7 +18,7 @@ export default function Last7DaysTable(props){
                     {props.fetchedStatistics.map(dailyStat=>{
                         return(
                             <tr>
-                                <td>{dailyStat.date}</td>
+                                <td>{new Date(dailyStat.date).toLocaleDateString('it')}</td>
                                 <td>{dailyStat.dailyBHTotal}</td>
                                 <td>{dailyStat.dailySTHTotal}</td>
                                 <td>{dailyStat.dailyCUMCTotal}</td>
