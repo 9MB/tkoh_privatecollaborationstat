@@ -1,7 +1,7 @@
 import Table from 'react-bootstrap/Table';
 
 
-export default function Last7DaysTable(props){
+export default function Last7DaysTable(props) {
     return (
         <>
             <Table striped bordered hover variant="light">
@@ -15,10 +15,10 @@ export default function Last7DaysTable(props){
                     </tr>
                 </thead>
                 <tbody>
-                    {props.fetchedStatistics.map(dailyStat=>{
-                        return(
+                    {props.fetchedStatistics.map(dailyStat => {
+                        return (
                             <tr>
-                                <td>{new Date(dailyStat.date).toLocaleDateString('zu-ZA')}</td>
+                                <td>{new Date(dailyStat.date).toLocaleDateString('it')}</td>
                                 <td>{dailyStat.dailyBHTotal}</td>
                                 <td>{dailyStat.dailySTHTotal}</td>
                                 <td>{dailyStat.dailyCUMCTotal}</td>

@@ -6,10 +6,9 @@ import { db } from './index';
 import SummaryTable from './Components/SummaryTable';
 import Spinner from 'react-bootstrap/Spinner'
 import Last7DaysTable from './Components/Last7DaysTable';
-import Row from 'react-bootstrap/Row'
 
 export const specialtiesArray = ["AandE", "AandOT", "MED", "ORTGYN", "SUR"];
-var currentSelectedDate = new Date().toLocaleDateString('zu-ZA');
+var currentSelectedDate = new Date().toDateString();
 
 function App() {
   const [logIn, setLogIn] = useState("");
@@ -60,7 +59,7 @@ function App() {
     const BH_count = parseInt(document.getElementById(`${department}bh_count`).value);
     const STH_count = parseInt(document.getElementById(`${department}sth_count`).value);
     const CUMC_count = parseInt(document.getElementById(`${department}cumc_count`).value);
-    const today = new Date().toLocaleDateString('zu-ZA');
+    const today = new Date().toDateString();
     const historyObject = {
       date: today,
       BH_count: BH_count,
@@ -148,7 +147,7 @@ function App() {
   async function calculateStatistics() {
     const statisticsRef = doc(db, 'Statistics', 'StatisticsLog');
     var tmp_last7DaysArray = [...last7DaysArray];
-    const today = new Date().toLocaleDateString('zu-ZA');
+    const today = new Date().toDateString();
     var dailyTotal = 0;
     var dailyBHTotal = 0;
     var dailySTHTotal = 0;
@@ -228,9 +227,9 @@ function App() {
     currentSelectedDate = dateString;
     const selectedDateHistory = pastHistory.filter(history => history.date === dateString)[0];
     if (selectedDateHistory !== undefined) {
-      document.getElementById(`${department}bh_count`).value = !isNaN(selectedDateHistory.BH_count)?selectedDateHistory.BH_count:0;
-      document.getElementById(`${department}sth_count`).value = !isNaN(selectedDateHistory.STH_count)?selectedDateHistory.STH_count:0;
-      document.getElementById(`${department}cumc_count`).value = !isNaN(selectedDateHistory.CUMC_count)?selectedDateHistory.CUMC_count:0;
+      document.getElementById(`${department}bh_count`).value = !isNaN(selectedDateHistory.BH_count) ? selectedDateHistory.BH_count : 0;
+      document.getElementById(`${department}sth_count`).value = !isNaN(selectedDateHistory.STH_count) ? selectedDateHistory.STH_count : 0;
+      document.getElementById(`${department}cumc_count`).value = !isNaN(selectedDateHistory.CUMC_count) ? selectedDateHistory.CUMC_count : 0;
     } else {
       document.getElementById(`${department}bh_count`).value = 0;
       document.getElementById(`${department}sth_count`).value = 0;
@@ -319,39 +318,39 @@ function App() {
                                 <div className="SpecialtyRow">
                                   <div className="BedCountColumn">
                                     <div className="Row">
-                                    <label for={`${ward.specialty}bh_count`} className="CounterLabel">BH:</label>
-                                    <select className="covid_counter" id={`${ward.specialty}bh_count`} defaultValue={ward.BH_count}>
-                                      {[...Array(50).keys()].map(option => {
-                                        return (
-                                          <option className="covid_counter_option" value={option}>{option}</option>
-                                        )
-                                      })}
-                                    </select>
+                                      <label for={`${ward.specialty}bh_count`} className="CounterLabel">BH:</label>
+                                      <select className="covid_counter" id={`${ward.specialty}bh_count`} defaultValue={ward.BH_count}>
+                                        {[...Array(50).keys()].map(option => {
+                                          return (
+                                            <option className="covid_counter_option" value={option}>{option}</option>
+                                          )
+                                        })}
+                                      </select>
                                     </div>
                                     <div className="Row">
-                                    <label for={`${ward.specialty}sth_count`} className="CounterLabel">STH:</label>
-                                    <select className="covid_counter" id={`${ward.specialty}sth_count`} defaultValue={ward.STH_count}>
-                                      {[...Array(50).keys()].map(option => {
-                                        return (
-                                          <option className="covid_counter_option" value={option}>{option}</option>
-                                        )
-                                      })}
-                                    </select>
+                                      <label for={`${ward.specialty}sth_count`} className="CounterLabel">STH:</label>
+                                      <select className="covid_counter" id={`${ward.specialty}sth_count`} defaultValue={ward.STH_count}>
+                                        {[...Array(50).keys()].map(option => {
+                                          return (
+                                            <option className="covid_counter_option" value={option}>{option}</option>
+                                          )
+                                        })}
+                                      </select>
                                     </div>
                                     <div className="Row">
-                                    <label for={`${ward.specialty}cumc_count`} className="CounterLabel">CUMC:</label>
-                                    <select className="covid_counter" id={`${ward.specialty}cumc_count`} defaultValue={ward.CUMC_count}>
-                                      {[...Array(50).keys()].map(option => {
-                                        return (
-                                          <option className="covid_counter_option" value={option}>{option}</option>
-                                        )
-                                      })}
-                                    </select>
+                                      <label for={`${ward.specialty}cumc_count`} className="CounterLabel">CUMC:</label>
+                                      <select className="covid_counter" id={`${ward.specialty}cumc_count`} defaultValue={ward.CUMC_count}>
+                                        {[...Array(50).keys()].map(option => {
+                                          return (
+                                            <option className="covid_counter_option" value={option}>{option}</option>
+                                          )
+                                        })}
+                                      </select>
                                     </div>
                                     <label id="SelectDateLabel" for="start">Select Date:</label>
-                                    <input type="date" id="SelectDateInput" name="trip-start" defaultValue={new Date().toLocaleDateString('zu-ZA')} onChange={(event) => { viewHistory(event.target.value, ward.specialty, ward.pastHistory) }} />
+                                    <input type="date" id="SelectDateInput" name="trip-start" defaultValue={new Date().toDateString()} onChange={(event) => { viewHistory(event.target.value, ward.specialty, ward.pastHistory) }} />
                                   </div>
-                                  <Button variant="success" onClick={() => { currentSelectedDate === new Date().toLocaleDateString('zu-ZA') ? updateDepartment(ward.specialty, ward.pastHistory) : updateHistory(ward.specialty, ward.pastHistory) }}>Update</Button>
+                                  <Button variant="success" onClick={() => { currentSelectedDate === new Date().toDateString() ? updateDepartment(ward.specialty, ward.pastHistory) : updateHistory(ward.specialty, ward.pastHistory) }}>Update</Button>
                                 </div>
                                 <div className="InfoRow">
                                   <h5>Last Update @ {new Date(ward.lastupdate).toLocaleString()}</h5>
