@@ -223,8 +223,7 @@ function App() {
   }
 
   function viewHistory(dateString, department, pastHistory) {
-    console.log("DateString", dateString);
-    currentSelectedDate = dateString;
+    currentSelectedDate = new Date(dateString).toDateString();
     const selectedDateHistory = pastHistory.filter(history => history.date === dateString)[0];
     if (selectedDateHistory !== undefined) {
       document.getElementById(`${department}bh_count`).value = !isNaN(selectedDateHistory.BH_count) ? selectedDateHistory.BH_count : 0;
@@ -348,7 +347,7 @@ function App() {
                                       </select>
                                     </div>
                                     <label id="SelectDateLabel" for="start">Select Date:</label>
-                                    <input type="date" id="SelectDateInput" name="trip-start" defaultValue={new Date().toDateString()} onChange={(event) => { viewHistory(event.target.value, ward.specialty, ward.pastHistory) }} />
+                                    <input type="date" id="SelectDateInput" name="trip-start" defaultValue={new Date().toLocaleDateString('zu-ZA')} onChange={(event) => { viewHistory(event.target.value, ward.specialty, ward.pastHistory) }} />
                                   </div>
                                   <Button variant="success" onClick={() => { currentSelectedDate === new Date().toDateString() ? updateDepartment(ward.specialty, ward.pastHistory) : updateHistory(ward.specialty, ward.pastHistory) }}>Update</Button>
                                 </div>
