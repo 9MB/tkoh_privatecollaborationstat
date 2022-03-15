@@ -166,21 +166,29 @@ function App() {
       dailyCUMCTotal: dailyCUMCTotal
     }
 
-    if (allDaysArray.current.length > 0 && allDaysArray.current[allDaysArray.current.length - 1].date === today) {
+    const newDailyObject = {
+      date: today,
+      dailyTotal: 0,
+      dailyBHTotal: 0,
+      dailySTHTotal: 0,
+      dailyCUMCTotal: 0
+    }
+
+    if (allDaysArray.current.length > 0 && new Date(allDaysArray.current[allDaysArray.current.length - 1].date).toDateString() == today) {
       allDaysArray.current.splice(-1, 1);
       allDaysArray.current.push(dailyObject);
     } else {
       allDaysArray.current.push(dailyObject)
     }
 
-    if (tmp_last7DaysArray.length > 0 && tmp_last7DaysArray[tmp_last7DaysArray.length - 1].date === today) {
+    if (tmp_last7DaysArray.length > 0 && new Date(tmp_last7DaysArray[tmp_last7DaysArray.length - 1].date).toDateString() == today) {
       tmp_last7DaysArray.splice(-1, 1);
       tmp_last7DaysArray.push(dailyObject);
     } else if (tmp_last7DaysArray.length === 7) {
       tmp_last7DaysArray.splice(0, 1);
       tmp_last7DaysArray.push(dailyObject);
     } else {
-      tmp_last7DaysArray.push(dailyObject);
+      tmp_last7DaysArray.push(newDailyObject);
     }
     setLast7DaysArray([...tmp_last7DaysArray]);
     console.log(tmp_last7DaysArray);
