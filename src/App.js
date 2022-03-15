@@ -228,9 +228,9 @@ function App() {
     currentSelectedDate = dateString;
     const selectedDateHistory = pastHistory.filter(history => history.date === dateString)[0];
     if (selectedDateHistory !== undefined) {
-      document.getElementById(`${department}bh_count`).value = selectedDateHistory.BH_count;
-      document.getElementById(`${department}sth_count`).value = selectedDateHistory.STH_count;
-      document.getElementById(`${department}cumc_count`).value = selectedDateHistory.CUMC_count;
+      document.getElementById(`${department}bh_count`).value = !isNaN(selectedDateHistory.BH_count)?selectedDateHistory.BH_count:0;
+      document.getElementById(`${department}sth_count`).value = !isNaN(selectedDateHistory.STH_count)?selectedDateHistory.STH_count:0;
+      document.getElementById(`${department}cumc_count`).value = !isNaN(selectedDateHistory.CUMC_count)?selectedDateHistory.CUMC_count:0;
     } else {
       document.getElementById(`${department}bh_count`).value = 0;
       document.getElementById(`${department}sth_count`).value = 0;
