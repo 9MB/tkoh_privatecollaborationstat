@@ -24,7 +24,7 @@ export default function SummaryTable(props) {
                                 <td>{props.fetchedData[index].STH_count}</td>
                                 <td>{props.fetchedData[index].CUMC_count}</td>
                                 <td>{props.fetchedData[index].total}</td>
-                                <td>{new Date(props.fetchedData[index].lastupdate).toLocaleDateString("it")}</td>
+                                <td>{new Date(props.fetchedData[index].lastupdate).toLocaleDateString("zu-ZA")}</td>
                             </tr>
                         )
                     })}
