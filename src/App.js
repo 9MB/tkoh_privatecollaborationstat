@@ -64,7 +64,8 @@ function App() {
       date: today,
       BH_count: BH_count,
       STH_count: STH_count,
-      CUMC_count: CUMC_count
+      CUMC_count: CUMC_count,
+      total: BH_count + STH_count + CUMC_count
     }
 
     if (tmp_pastHistory.length > 0 && tmp_pastHistory[tmp_pastHistory.length - 1].date === today) {
@@ -189,6 +190,23 @@ function App() {
       tmp_last7DaysArray.push(dailyObject);
     } else {
       tmp_last7DaysArray.push(newDailyObject);
+      specialtiesArray.forEach(specialty => {
+        const departmentRef = doc(db, 'Departments', specialty);
+        setDoc(departmentRef, {
+          BH_count: 0,
+          STH_count: 0,
+          CUMC_count: 0,
+          total: 0,
+          lastupdate: new Date().getTime(),
+          pastHistory: {
+            BH_count: 0,
+            STH_count: 0,
+            CUMC_count: 0,
+            total: 0,
+            date: new Date().toDateString()
+          }
+        })
+      })
     }
     setLast7DaysArray([...tmp_last7DaysArray]);
     console.log(tmp_last7DaysArray);
