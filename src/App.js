@@ -189,7 +189,7 @@ function App() {
       tmp_last7DaysArray.splice(0, 1);
       tmp_last7DaysArray.push(newDailyObject);
       fetchedDepartmentsStatus.forEach(department => {
-        const departmentRef = doc(db, 'Departments', department);
+        const departmentRef = doc(db, 'Departments', department.specialty);
         let tmp_pastHistory = department.pastHistory;
         tmp_pastHistory.push({
           BH_count: 0,
@@ -210,8 +210,8 @@ function App() {
     } else {
       tmp_last7DaysArray.push(newDailyObject);
       fetchedDepartmentsStatus.forEach(department => {
-        const departmentRef = doc(db, 'Departments', department);
-        let tmp_pastHistory = department.pastHistory;
+        const departmentRef = doc(db, 'Departments', department.specialty);
+        var tmp_pastHistory = department.pastHistory;
         tmp_pastHistory.push({
           BH_count: 0,
           STH_count: 0,
