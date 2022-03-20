@@ -185,26 +185,47 @@ function App() {
     if (tmp_last7DaysArray.length > 0 && new Date(tmp_last7DaysArray[tmp_last7DaysArray.length - 1].date).toDateString() == today) {
       tmp_last7DaysArray.splice(-1, 1);
       tmp_last7DaysArray.push(dailyObject);
-    } else if (tmp_last7DaysArray.length === 7) {
+    } else if (tmp_last7DaysArray.length === 7 && new Date(tmp_last7DaysArray[tmp_last7DaysArray.length - 1].date).toDateString() != today) {
       tmp_last7DaysArray.splice(0, 1);
-      tmp_last7DaysArray.push(dailyObject);
-    } else {
       tmp_last7DaysArray.push(newDailyObject);
-      specialtiesArray.forEach(specialty => {
-        const departmentRef = doc(db, 'Departments', specialty);
+      fetchedDepartmentsStatus.forEach(department => {
+        const departmentRef = doc(db, 'Departments', department);
+        let tmp_pastHistory = department.pastHistory;
+        tmp_pastHistory.push({
+          BH_count: 0,
+          STH_count: 0,
+          CUMC_count: 0,
+          total: 0,
+          date: today
+        })
         setDoc(departmentRef, {
           BH_count: 0,
           STH_count: 0,
           CUMC_count: 0,
           total: 0,
           lastupdate: new Date().getTime(),
-          pastHistory: {
-            BH_count: 0,
-            STH_count: 0,
-            CUMC_count: 0,
-            total: 0,
-            date: new Date().toDateString()
-          }
+          pastHistory: tmp_pastHistory
+        })
+      })
+    } else {
+      tmp_last7DaysArray.push(newDailyObject);
+      fetchedDepartmentsStatus.forEach(department => {
+        const departmentRef = doc(db, 'Departments', department);
+        let tmp_pastHistory = department.pastHistory;
+        tmp_pastHistory.push({
+          BH_count: 0,
+          STH_count: 0,
+          CUMC_count: 0,
+          total: 0,
+          date: today
+        })
+        setDoc(departmentRef, {
+          BH_count: 0,
+          STH_count: 0,
+          CUMC_count: 0,
+          total: 0,
+          lastupdate: new Date().getTime(),
+          pastHistory: tmp_pastHistory
         })
       })
     }
