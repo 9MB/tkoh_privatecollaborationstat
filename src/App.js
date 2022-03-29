@@ -203,7 +203,6 @@ function App() {
           STH_count: 0,
           CUMC_count: 0,
           total: 0,
-          lastupdate: new Date().getTime(),
           pastHistory: tmp_pastHistory
         })
       })
@@ -224,7 +223,6 @@ function App() {
           STH_count: 0,
           CUMC_count: 0,
           total: 0,
-          lastupdate: new Date().getTime(),
           pastHistory: tmp_pastHistory
         })
       })
