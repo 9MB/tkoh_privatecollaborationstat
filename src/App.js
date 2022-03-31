@@ -204,7 +204,8 @@ function App() {
           CUMC_count: 0,
           total: 0,
           pastHistory: tmp_pastHistory
-        })
+        },
+        { merge: true })
       })
     } else {
       tmp_last7DaysArray.push(newDailyObject);
@@ -224,7 +225,8 @@ function App() {
           CUMC_count: 0,
           total: 0,
           pastHistory: tmp_pastHistory
-        })
+        },
+        { merge: true })
       })
     }
     setLast7DaysArray([...tmp_last7DaysArray]);
@@ -278,6 +280,14 @@ function App() {
       document.getElementById(`${department}bh_count`).value = 0;
       document.getElementById(`${department}sth_count`).value = 0;
       document.getElementById(`${department}cumc_count`).value = 0;
+    }
+  }
+
+  function updateCurrentOrHistorySwitch(currentSelectedDate, specialty, pastHistory){
+    if(currentSelectedDate == new Date().toDateString()){
+      updateDepartment(specialty, pastHistory);
+    }else{
+      updateHistory(specialty, pastHistory);
     }
   }
 
@@ -394,7 +404,7 @@ function App() {
                                     <label id="SelectDateLabel" for="start">Select Date:</label>
                                     <input type="date" id="SelectDateInput" name="trip-start" defaultValue={new Date().toLocaleDateString('zu-ZA')} onChange={(event) => { viewHistory(event.target.value, ward.specialty, ward.pastHistory) }} />
                                   </div>
-                                  <Button variant="success" onClick={() => { currentSelectedDate === new Date().toDateString() ? updateDepartment(ward.specialty, ward.pastHistory) : updateHistory(ward.specialty, ward.pastHistory) }}>Update</Button>
+                                  <Button variant="success" onClick={() => { updateCurrentOrHistorySwitch(currentSelectedDate, ward.specialty, ward.pastHistory)}}>Update</Button>
                                 </div>
                                 <div className="InfoRow">
                                   <h5>Last Update @ {new Date(ward.lastupdate).toLocaleString()}</h5>
